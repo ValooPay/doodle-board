@@ -9,7 +9,7 @@ const Homepage = () => {
             <ul className="homepageRules">
                 <li>Be respectful to one another.</li>
                 <li>Try to keep things SFW!</li>
-                <li>Let your creativy flow and have fun!</li>
+                <li>Let your creativity flow and have fun!</li>
             </ul>
         </StyledHomepageRules>
         <div className="cloud transparency"></div>

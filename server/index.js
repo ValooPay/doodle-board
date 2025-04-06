@@ -15,7 +15,10 @@ app.get("/users", getUsers);
 app.post("/userlogin", getUserLogin);
 app.post("/signup", createUser);
 
+
 ///// POST(S)-RELATED HANDLERS
+
+///// GET POSTS & MAKE A NEW POST
 app.get("/posts", getPosts);
 app.post("/newpost", createPost);
 

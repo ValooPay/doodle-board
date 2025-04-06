@@ -11,6 +11,7 @@ const ManageDoodles = () => {
     const objectId = useParams()
     const navigate = useNavigate()
 
+    ///// Initial checks
     if(userLogin === null){
         return <div className="pages"><p>Log in to view content</p></div>
     }
@@ -18,12 +19,12 @@ const ManageDoodles = () => {
         navigate("/posts")
     }
 
-    return userLogin._id === null ? <div className="pages">Log in to view content</div> : <>
+    return userLogin._id === null ? <div className="pages">Log in to view content</div> : userLogin._id === objectId.user_id ? <>
         <div className="pages">
         <h2>Hidden doodles</h2>
             <StyledPostsGrid>
                 {allPosts.map((post) => {
-                    if(post.shared === false || post.shared === null){
+                    if((post.shared === false || post.shared === null) && post.user_id === userLogin._id){
                         return <Link key={post._id} to={`/managedoodles/${userLogin._id}/${post._id}`}><img src={post.img} /></Link>
                 }
                 })}
@@ -31,13 +32,13 @@ const ManageDoodles = () => {
             <h2>Shared doodles</h2>
             <StyledPostsGrid>
                 {allPosts.map((post) => {
-                    if(post.shared === true){
+                    if(post.shared === true && post.user_id === userLogin._id){
                         return <Link key={post._id} to={`/managedoodles/${userLogin._id}/${post._id}`}><img src={post.img} /></Link>
                     }
                 })}
             </StyledPostsGrid>
         </div>
-    </>
+    </> : navigate("/posts")
 }
 
 export default ManageDoodles

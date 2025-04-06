@@ -148,7 +148,7 @@ const getPosts = async (req, res) => {
     try{
         await client.connect()
         const db = client.db(DB)
-        const allPosts = await db.collection(POSTS_COLLECTION).find().project({user_id: 0}).toArray()
+        const allPosts = await db.collection(POSTS_COLLECTION).find().sort({ $natural: -1 }).toArray()
         if(allPosts.length === 0){
             return res.status(404).json({
                 status: 404,
@@ -228,9 +228,8 @@ const editPost = async (req, res) => {
         await client.connect()
         const db = client.db(DB)
         const updatedPost = await db.collection(POSTS_COLLECTION).updateOne({_id: doodleId, user_id: userId}, {$set: {title: newTitle, description: newDescription, shared: shared }})
-        console.log(updatedPost)
 
-        if(!doodleId){
+        if(updatedPost.matchedCount === 0){
             return res.status(404).json({
                 status: 404,
                 message: "No doodle found"
@@ -267,7 +266,7 @@ const deletePost = async (req, res) => {
     try{
         const db = client.db(DB);
         const deletedPost = await db.collection(POSTS_COLLECTION).deleteOne({_id: doodleId, user_id: userId})
-
+        const updatedUserCreatedPosts = await db.collection(USERS_COLLECTION).updateOne({_id: userId}, {$pull: {createdPosts: doodleId}})
         if(deletedPost.deletedCount === 0){
             res.status(409).json({
                 status: 409, 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useContext} from "react"
 import { Navigate, useNavigate } from "react-router-dom";
 import Menu from "../components/Menu"
 import { UserLoginContext } from "../contexts/UserLogInContext";
+import { AllPostsContext } from "../contexts/AllPostsContext";
 
 const CreateNewDrawing = () => {
     const canvasRef = useRef(null);
@@ -13,9 +14,10 @@ const CreateNewDrawing = () => {
     const [postingStatus, setPostingStatus] = useState("idle")
     const [errorMessage, setErrorMessage] = useState(null)
     const { userLogin } = useContext(UserLoginContext)
+    const { setRefetch } = useContext(AllPostsContext)
     const navigate = useNavigate()
-console.log(userLogin)
 
+    
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -80,6 +82,7 @@ console.log(userLogin)
             else{
                 setErrorMessage(null)
                 setPostingStatus("idle")
+                setRefetch((fetch) => fetch + 1)
                 navigate(`/managedoodles/${userLogin._id}`)
             }
         })

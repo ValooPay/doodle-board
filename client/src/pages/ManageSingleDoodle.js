@@ -1,5 +1,5 @@
 import { UserLoginContext } from "../contexts/UserLogInContext"
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Navigate, useNavigate } from "react-router-dom"
 import { AllPostsContext } from "../contexts/AllPostsContext"
@@ -9,27 +9,26 @@ const ManageSingleDoodle = () => {
     const { userLogin } = useContext(UserLoginContext)
     const { allPosts, setRefetch } = useContext(AllPostsContext)
     const navigate = useNavigate()
-
     const userAndDoodleId = useParams()
-    const userId = userAndDoodleId.user_id
-    const doodleId = userAndDoodleId._id
-    
-    const [newTitle, setNewTitle] = useState()
-    const [newDescription, setNewDescription] = useState()
-    const [shared, setShared] = useState()
+
+    ///// States
+    const [newTitle, setNewTitle] = useState("")
+    const [newDescription, setNewDescription] = useState("")
+    const [shared, setShared] = useState("")
     const [status, setStatus] = useState("idle")
     const [errorMessage, setErrorMessage] = useState(null)
-
-    ///// Checks beforehand to see if user is logged in
-    if(userLogin === null){
-        return <div className="pages"><p>Log in to view content</p></div>
-    }
-    if(userLogin._id !== userId){
-        navigate("/posts")
-    }
-
-    ///// Find post with the same doodleId
-    const foundPost = allPosts.find((post) => post._id === doodleId)
+    const [image, setImage] = useState(null)
+    
+    useEffect(() => {
+        if(allPosts !== null){
+            ///// Find post with the same doodleId
+            const foundPost = allPosts.find((post) => post._id === userAndDoodleId._id)
+            setNewTitle(foundPost.title)
+            setNewDescription(foundPost.description)
+            setShared(foundPost.shared)
+            setImage(foundPost.img)
+        }
+    })
 
     ///// Function to edit post
     const handleSubmit = (ev) => {
@@ -53,7 +52,8 @@ const ManageSingleDoodle = () => {
             else{
                 setRefetch((fetch) => fetch + 1)
                 setStatus("idle")
-                return <p>Edited successfully!</p>
+                navigate(`/managedoodles/${userId}`)
+                return console.log("Updated succesfully!")
             }
         })
         .catch(err => {
@@ -91,20 +91,22 @@ const ManageSingleDoodle = () => {
         })
     }
 
-    return userLogin._id === null ? <></> : <>
+    return userLogin === null? <div className="pages"><p>Log in to view content.</p></div> : userLogin._id !== userAndDoodleId.user_id ? navigate("/posts") : allPosts === null ? <p>Loading...</p> : <>
     <div className="pages">
         <StyledPostEdit>
-            <img src={foundPost.img} />
+            <img src={image} />
             { <div style={{display: "flex", flexDirection: "column", border: "1px dashed var(--color-teal1)", justifyContent: "center", padding: "1rem"}}>
             <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column"}}>
-                <label htmlFor="title" style={{display: "flex", justifyContent: "space-between", margin: "0.5rem"}}>Title: 
-                    <input type="text" placeholder={foundPost.title === null ? "Title" : <></>} defaultValue={foundPost.title !== null ? foundPost.title : null} id="title" onChange={(ev) => {setNewTitle(ev.target.value)}}></input>
+                <label htmlFor="newTitle" style={{display: "flex", justifyContent: "space-between", margin: "0.5rem"}}>Title: 
+                    <input type="text" id="newTitle" onChange={(ev) => {setNewTitle(ev.target.value)}} placeholder="Title" defaultValue={newTitle} ></input>
                 </label>
-                <label htmlFor="description" style={{display: "flex", justifyContent: "space-between", margin: "0.5rem"}}>Description: 
-                    <textarea type="text" placeholder={foundPost.description === null ? "Description" : <></>} defaultValue={foundPost.description !== null ? foundPost.description : null} id="description" onChange={(ev) => {setNewDescription(ev.target.value)}}></textarea>
+                <label htmlFor="newDescription" style={{display: "flex", justifyContent: "space-between", margin: "0.5rem"}}>Description: 
+                    <textarea type="text" id="newDescription" onChange={(ev) => {setNewDescription(ev.target.value)}} placeholder="Description" defaultValue={newDescription} ></textarea>
                 </label>
-                <button type="submit" disabled={status !== "idle"} onClick={() => setShared(true)} style={{width: "fit-content", margin: "0.5rem auto"}}>Post</button>
-                <button type="submit" disabled={status !== "idle"} style={{width: "fit-content", margin: "0.5rem auto"}}>Save</button>
+                <label htmlFor="sharedSwitch" style={{display: "flex", justifyContent: "left", margin: "0.5rem"}}> Share your doodle?: 
+                    <input onClick={() => {shared === true ? setShared(false) : setShared(true)}} defaultChecked={shared === true} id="sharedSwitch" type="checkbox" style={{marginLeft: "1rem"}}></input>
+                </label>
+                <button type="submit" disabled={status !== "idle"} style={{width: "fit-content", margin: "0.5rem auto"}}>Save changes</button>
                 <button type="submit" disabled={status !== "idle"} onClick={handleDelete} style={{width: "fit-content", margin: "0.5rem auto"}}>Delete</button>
             </form>
             </div> }
