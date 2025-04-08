@@ -5,7 +5,7 @@ const PORT = 4000;
 
 const app = express();
 
-const { getUsers, getUserLogin, createUser, getPosts, createPost, editPost, deletePost } = require("./handlers")
+const { getUsers, getUserLogin, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost } = require("./handlers")
 
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -24,9 +24,13 @@ app.post("/newpost", createPost);
 
 ///// EDIT POST
 app.patch("/editpost/:userId/:doodleId", editPost);
+app.patch("/like/:postId/:userId", likePost);
+app.patch("/unlike/:postId/:userId", unlikePost);
+app.patch("/comment/:postId/:userId", commentOnPost);
+app.patch("/removecomment/:postId", removeCommentFromPost)
 
 ///// DELETE POST
-app.delete("/deleted/:userId/:doodleId", deletePost)
+app.delete("/deleted/:userId/:doodleId", deletePost);
 
 
 app.use(/(.*)/, (req, res) => {

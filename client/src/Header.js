@@ -55,7 +55,6 @@ const Header = () => {
             <Link to="/newAccount" style={{margin: "auto 4rem"}}>Sign up</Link>
         </StyledLoginSignup>
         </> : <>
-        <Link to="/" style={{margin: "auto 2rem auto 0"}}>Home</Link>
         <Link to="/posts" style={{margin: "auto 0"}}>Posts</Link>
         <Link to={`/createdrawing/${userLogin._id}`} style={{display:"flex", marginRight: "auto", marginLeft: "2rem", width:"fit-content"}} >New drawing</Link>
         <StyledLoginSignup>
@@ -75,9 +74,9 @@ export default Header
 const StyledHeader = styled.div`
     display: flex;
     flex-direction: row;
+    top: 0;
     position: sticky;
     justify-content: space-between;
-    max-width: 100%;
     padding: 1rem 0;
     background-color: var(--color-teal1);
     color: var(--color-orange1);

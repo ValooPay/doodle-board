@@ -11,6 +11,8 @@ const ManageSingleDoodle = () => {
     const navigate = useNavigate()
     const userAndDoodleId = useParams()
 
+
+    
     ///// States
     const [newTitle, setNewTitle] = useState("")
     const [newDescription, setNewDescription] = useState("")
@@ -19,16 +21,21 @@ const ManageSingleDoodle = () => {
     const [errorMessage, setErrorMessage] = useState(null)
     const [image, setImage] = useState(null)
     
+    ///// useEffect to set the default values of the inputs
     useEffect(() => {
         if(allPosts !== null){
             ///// Find post with the same doodleId
             const foundPost = allPosts.find((post) => post._id === userAndDoodleId._id)
-            setNewTitle(foundPost.title)
-            setNewDescription(foundPost.description)
-            setShared(foundPost.shared)
-            setImage(foundPost.img)
+            if(!foundPost){
+                setErrorMessage("Post not found")
+            } else{
+                setNewTitle(foundPost.title)
+                setNewDescription(foundPost.description)
+                setShared(foundPost.shared)
+                setImage(foundPost.img)
+            }
         }
-    })
+    }, [])
 
     ///// Function to edit post
     const handleSubmit = (ev) => {
@@ -42,7 +49,7 @@ const ManageSingleDoodle = () => {
                 "Content-Type": "application/json"
             }, body
         }
-        fetch(`/editpost/${userId}/${doodleId}`, options)
+        fetch(`/editpost/${userAndDoodleId.user_id}/${userAndDoodleId._id}`, options)
         .then(response => response.json())
         .then(data => {
             if(data.status !== 200){
@@ -52,7 +59,7 @@ const ManageSingleDoodle = () => {
             else{
                 setRefetch((fetch) => fetch + 1)
                 setStatus("idle")
-                navigate(`/managedoodles/${userId}`)
+                navigate(`/managedoodles/${userAndDoodleId.user_id}`)
                 return console.log("Updated succesfully!")
             }
         })
@@ -72,7 +79,7 @@ const ManageSingleDoodle = () => {
                 "Content-Type": "application/json"
             }
         }
-        fetch(`/deleted/${userId}/${doodleId}`, options)
+        fetch(`/deleted/${userAndDoodleId.user_id}/${userAndDoodleId._id}`, options)
         .then(response => response.json())
         .then(data => {
             if(data.status !== 200){
@@ -82,7 +89,7 @@ const ManageSingleDoodle = () => {
             else{
                 setRefetch((fetch) => fetch + 1)
                 setStatus("idle")
-                navigate(`/managedoodles/${userId}`)
+                navigate(`/managedoodles/${userAndDoodleId.user_id}`)
                 return <p>Successfully deleted!</p>
             }
         })

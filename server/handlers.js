@@ -148,7 +148,7 @@ const getPosts = async (req, res) => {
     try{
         await client.connect()
         const db = client.db(DB)
-        const allPosts = await db.collection(POSTS_COLLECTION).find().sort({ $natural: -1 }).toArray()
+        const allPosts = await db.collection(POSTS_COLLECTION).find().sort({ date: -1 }).toArray()
         if(allPosts.length === 0){
             return res.status(404).json({
                 status: 404,
@@ -173,12 +173,13 @@ const getPosts = async (req, res) => {
 }
 
 const createPost = async (req, res) => {
-    const { username, user_id, date, img } = req.body
+    const { username, user_id, img } = req.body
     const _id = uuidv4()
     const liked = [];
     const comments = [];
     const title = "";
     const description = "";
+    const date = new Date()
 
     const client = new MongoClient(MONGO_URI)
     try {
@@ -258,6 +259,197 @@ const editPost = async (req, res) => {
     }
 }
 
+const likePost = async (req, res) => {
+///// Get user's ID and post's ID from the body (400 if not found)
+///// Find the user document (404 if can't find user)
+///// Check in likedPosts see if there's already a post's ID (if yes, 409)
+///// If not, $push & updateOne (twice, once for likedPosts & liked)... updateOne on the Posts document first, then the Users
+///// Check matchedCount, if post doesn't exist, throw back a 404
+    const client = new MongoClient(MONGO_URI)
+    const { userId, postId } = req.body;
+
+    try{
+        await client.connect()
+        const db = client.db(DB)
+        const foundUser = await db.collection(USERS_COLLECTION).findOne({_id: userId})
+        const foundPost = await db.collection(POSTS_COLLECTION).findOne({_id: postId})
+        
+        const addLikeToPost = await db.collection(POSTS_COLLECTION).updateOne(foundPost, {$push: {liked: userId}})
+        const addLikeToUser = await db.collection(USERS_COLLECTION).updateOne(foundUser, {$push: {likedPosts: postId}})
+
+        if(!foundUser){
+            return res.status(404).json({
+                status: 404,
+                message: "No user found"
+            })
+        }
+        if(!foundPost){
+            return res.status(404).json({
+                status: 404,
+                message: "No post found"
+            })
+        }
+        if(foundUser.likedPosts.includes(postId)){
+            return res.status(409).json({
+                status: 409,
+                message: "Post already liked"
+            })
+        }
+        res.status(200).json({
+            status: 200,
+            data: {addLikeToPost, addLikeToUser}
+        })
+    }
+    catch(error){
+        console.error("Error editing post", error)
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+    }
+    finally {
+        await client.close()
+    }
+}
+
+const unlikePost = async (req, res) => {
+    const client = new MongoClient(MONGO_URI)
+    const { userId, postId } = req.body;
+
+    try{
+        await client.connect()
+        const db = client.db(DB)
+        const foundUser = await db.collection(USERS_COLLECTION).findOne({_id: userId})
+        const foundPost = await db.collection(POSTS_COLLECTION).findOne({_id: postId})
+        
+        const removeLikeToPost = await db.collection(POSTS_COLLECTION).updateOne(foundPost, {$pull: {liked: userId}})
+        const removeLikeToUser = await db.collection(USERS_COLLECTION).updateOne(foundUser, {$pull: {likedPosts: postId}})
+
+        if(!foundUser){
+            return res.status(404).json({
+                status: 404,
+                message: "No user found"
+            })
+        }
+        if(!foundPost){
+            return res.status(404).json({
+                status: 404,
+                message: "No post found"
+            })
+        }
+        if(!foundUser.likedPosts.includes(postId)){
+            return res.status(409).json({
+                status: 409,
+                message: "Post not liked"
+            })
+        }
+        res.status(200).json({
+            status: 200,
+            data: {removeLikeToPost, removeLikeToUser}
+        })
+    }
+    catch(error){
+        console.error("Error editing post", error)
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+    }
+    finally {
+        await client.close()
+    }
+}
+
+const commentOnPost = async (req, res) => {
+///// Username, timestamp (backend), message, post_id -- 3 things needed
+///// Get information from req.body (username, message, post_id)
+///// Make timestamp in the backend
+///// $push in the post's document's comments array
+///// if matchedCount === 0 => 404
+
+    const client = new MongoClient(MONGO_URI)
+    const date = new Date()
+    const { username, postId, message } = req.body;
+    
+    try{
+        await client.connect()
+        const db = client.db(DB)
+        const foundPost = await db.collection(POSTS_COLLECTION).findOne({_id: postId})
+
+        if(!foundPost){
+            return res.status(404).json({
+                status: 404,
+                message: "No doodle found"
+            })
+        }
+        if(!username){
+            return res.status(404).json({
+                status: 404,
+                message: "User not found -- Please log in to leave a comment"
+            })
+        }
+        if(message.length === 0){
+            return res.status(404).json({
+                status: 404,
+                message: "Please enter a message"
+            })
+        }
+        const updatedPost = await db.collection(POSTS_COLLECTION).updateOne(foundPost, {$push: {comments: {date: date, fromUser: username, message: message}}})
+        res.status(200).json({
+            status: 200,
+            data: updatedPost
+        })
+    }
+    catch(error){
+        console.error("Error adding comment", error)
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+    }
+    finally {
+        await client.close()
+    }
+}
+
+const removeCommentFromPost = async (req, res) => {
+    const client = new MongoClient(MONGO_URI)
+    const { postId, username, date, message } = req.body;
+
+    try{
+        await client.connect()
+        const db = client.db(DB)
+        const removeMessageFromPost = await db.collection(POSTS_COLLECTION).updateOne({_id: postId}, {$pull: {comments: {fromUser: username, date: new Date(date), message}}})
+
+        if(removeMessageFromPost.matchedCount === 0){
+            return res.status(404).json({
+                status: 404,
+                message: "No post found"
+            })
+        }
+        if(removeMessageFromPost.modifiedCount === 0){
+            return res.status(409).json({
+                status: 409,
+                message: "Comment has already been removed or does not exist"
+            })
+        }
+        res.status(200).json({
+            status: 200,
+            data: removeMessageFromPost
+        })
+    }
+    catch(error){
+        console.error("Error editing post", error)
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+    }
+    finally {
+        await client.close()
+    }
+}
+
 const deletePost = async (req, res) => {
     const client = new MongoClient(MONGO_URI);
     const userId = req.params.userId;
@@ -291,5 +483,4 @@ const deletePost = async (req, res) => {
 }
 
 
-
-module.exports = { getUsers, getUserLogin, createUser, getPosts, createPost, editPost, deletePost };
+module.exports = { getUsers, getUserLogin, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost };

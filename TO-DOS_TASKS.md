@@ -6,6 +6,9 @@
 - X Create new post (POST)
 - X Edit post (PATCH)
 - X Delete post (DELETE)
+- X Like (PATCH)
+- X Comment (PATCH)
+- X Delete comment (PATCH)
 
 
 
@@ -19,10 +22,11 @@
 - X Fix the manage doodles page to have only the doodles from a specific artist showing up
 - X Sort drawings by newest posted
 - X Fix "rendered more hooks than previous render" in ManageSingleDoodle
-- Page of all users
+- X Add comments & like button to posts
 - Pagination for the posts page
 - On click, zoom in on drawing/make it full size (and back to smaller size when clicking on it again)
 - Tokens or something for perpetual user login
+- Page of all users ? (Might do this one only if I have time to do profile pages)
 
 # Done, but need sprucing up: 
 - Homepage

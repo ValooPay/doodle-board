@@ -20,5 +20,5 @@ Posts
     img, (object, {src, alt} ? )
     shared, (true/false)
     liked,
-    comments: {user (string), date(string), comment(string)}
+    comments: {username (string), timestamp(string), message(string)}
 }

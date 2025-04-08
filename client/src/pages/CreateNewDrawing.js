@@ -62,8 +62,7 @@ const CreateNewDrawing = () => {
         ev.preventDefault()
         const canvas = canvasRef.current;
         const img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
-        const date = new Date().toString()
-        const body = JSON.stringify({user_id: userLogin._id, username: userLogin.username, date, img})
+        const body = JSON.stringify({user_id: userLogin._id, username: userLogin.username, img})
         const options = {
             method: "POST",
             headers: {

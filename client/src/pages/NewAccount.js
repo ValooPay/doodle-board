@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import LilCloud from "../components/LilCloud"
 
 const NewAccount = () => {
     const [ username, setUsername ] = useState("")
@@ -44,9 +45,9 @@ const NewAccount = () => {
 
 
     return <div className="pages">
-        <div style={{display: "flex", justifyContent: "center"}}>
-            <h3>Sign up</h3>
-        <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", width: "fit-content", margin: "0 auto"}}>
+        <div style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
+            <h2>Sign up</h2>
+        <form onSubmit={handleSubmit} style={{width: "fit-content", margin: "0 auto", backgroundColor: "var(--color-honeydew)", border: "solid 2px var(--color-orange2)", padding: "2rem 2rem 3rem", borderRadius: "20px", color:"var(--color-dark-green)"}}>
             <label className="signUpLabelsSpacing" htmlFor="usernameSignUpInput">Username: 
                 <input id="usernameSignUpInput" type="text" style={{margin: "0.5rem"}} onChange={(ev) => {setUsername(ev.target.value)}}></input>
             </label>
@@ -62,6 +63,7 @@ const NewAccount = () => {
             <p className="errorMessageLogin">{errorMessage}</p>
         </>}
         </div>
+        <LilCloud /> <LilCloud /> <LilCloud /> <LilCloud /> <LilCloud />
     </div>
 }
 

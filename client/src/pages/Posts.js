@@ -1,22 +1,35 @@
 import { AllPostsContext } from "../contexts/AllPostsContext.js"
-import { useContext } from "react"
+import { UserLoginContext } from "../contexts/UserLogInContext.js"
+import { useContext, useState } from "react"
+import DoodlePost from "../components/DoodlePost.js"
 import styled from "styled-components"
 
 const Posts = () => {
     const {allPosts} = useContext(AllPostsContext)
+    const {userLogin} = useContext(UserLoginContext)
+    const [status, setStatus] = useState("idle")
+    const [comment, setComment] = useState("")
+    const [like, setLike] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
+    // local status
 
     return <div className="pages">
-    {allPosts === null ? <><p>Nothing to see here</p></> : <>
+    {allPosts === null ? <p>Loading...</p> : <>
     {allPosts.map((post) => {
-        console.log(post)
         if(post.shared === true){
             return <StyledPost key={post._id}>
-                <p>{post.username}</p>
-                <p>{post.date}</p>
-                <p>{post.title}</p>
-                <p>{post.description}</p>
-                <img src={post.img}></img>
-                <p>{post.comments}</p>
+                <DoodlePost 
+                    post={post} 
+                    userLogin={userLogin} 
+                    comment={comment}
+                    setComment={setComment} 
+                    setLike={setLike} 
+                    like={like}
+                    status={status}
+                    setStatus={setStatus}
+                    errorMessage={errorMessage}
+                    setErrorMessage={setErrorMessage}
+                />
             </StyledPost>
         }
     })}
@@ -27,8 +40,12 @@ const Posts = () => {
 export default Posts
 
 const StyledPost = styled.div`
-    background-color: var(--color-white);
+    background-color: var(--color-honeydew);
     border: dashed 2px var(--color-teal1);
     padding: 1rem;
-    margin: 2rem;
+    margin: 2rem auto;
+    max-width: 80vw;
+    img{
+        background-color: var(--color-white)
+    }
 `
