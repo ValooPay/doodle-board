@@ -5,7 +5,7 @@ const PORT = 4000;
 
 const app = express();
 
-const { getUsers, getUserLogin, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost } = require("./handlers")
+const { getUsers, getUserLogin, getUserLoginCheck, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost } = require("./handlers")
 
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -13,7 +13,9 @@ app.use(morgan("tiny"));
 ///// USER(S)-RELATED HANDLERS
 app.get("/users", getUsers);
 app.post("/userlogin", getUserLogin);
+app.post("/autologin", getUserLoginCheck);
 app.post("/signup", createUser);
+
 
 
 ///// POST(S)-RELATED HANDLERS

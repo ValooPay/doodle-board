@@ -5,8 +5,9 @@ Users
     username, (string)
     email, (string)
     password, (string)
-    createdPosts, (array)
-    likedPosts (array)
+    createdPosts, (array with post_id)
+    likedPosts (array with post_id)
+    timestamps (array of numbers)
 }
 
 
@@ -16,9 +17,9 @@ Posts
     user_id, (string)
     (post)_id, (string)
     title, (string)
-    date, (string)
-    img, (object, {src, alt} ? )
-    shared, (true/false)
-    liked,
-    comments: {username (string), timestamp(string), message(string)}
+    date, (date object)
+    img, (string (base64))
+    shared, (boolean/true/false)
+    liked (array (user_id)),
+    comments: {(fromUser) username (string), date timestamp(date object), message (string)}
 }

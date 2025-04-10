@@ -6,10 +6,12 @@ import Posts from "./pages/Posts"
 import CreateNewDrawing from "./pages/CreateNewDrawing"
 import ManageDoodles from "./pages/ManageDoodles"
 import ManageSingleDoodle from "./pages/ManageSingleDoodle"
+import GlobalStyles from "./components/GlobalStyles"
 
 const App = () => {
     return (
     <Router>
+        <GlobalStyles />
         <Header />
         <Routes>
             <Route path="/" element={<Homepage />} />

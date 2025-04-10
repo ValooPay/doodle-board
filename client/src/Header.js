@@ -35,6 +35,8 @@ const Header = () => {
                 logIn(data.data)
                 setErrorMessage(null)
                 setFetchingStatus("idle")
+                localStorage.setItem("timestamp", JSON.stringify(data.timestamp))
+                localStorage.setItem("userId", JSON.stringify(data.data._id))
             }
         })
         .catch(err => {

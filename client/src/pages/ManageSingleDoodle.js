@@ -1,7 +1,7 @@
 import { UserLoginContext } from "../contexts/UserLogInContext"
 import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { AllPostsContext } from "../contexts/AllPostsContext"
 import styled from "styled-components"
 
@@ -35,7 +35,7 @@ const ManageSingleDoodle = () => {
                 setComments(foundPost.comments)
             }
         }
-    }, [])
+    }, [allPosts])
 
     ///// Function to edit post
     const handleSubmit = (ev) => {

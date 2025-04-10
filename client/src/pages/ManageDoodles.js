@@ -6,7 +6,7 @@ import { AllPostsContext } from "../contexts/AllPostsContext"
 import styled from "styled-components"
 
 const ManageDoodles = () => {
-    const { userLogin } = useContext(UserLoginContext)
+    const { userLogin, autoLoginStatus } = useContext(UserLoginContext)
     const { allPosts } = useContext(AllPostsContext)
     const objectId = useParams()
     const navigate = useNavigate()
@@ -19,7 +19,7 @@ const ManageDoodles = () => {
         navigate("/posts")
     }
 
-    return userLogin._id === null ? <div className="pages">Log in to view content</div> : userLogin._id === objectId.user_id ? <>
+    return userLogin.createdPosts.length === 0 ? <p>No doodles to show... yet!</p> : userLogin._id === null ? <div className="pages">Log in to view content</div> : autoLoginStatus === false ? <p>Loading...</p> : allPosts === null ? <p>Loading...</p> : userLogin._id === objectId.user_id ? <>
         <div className="pages">
         <h2>Hidden doodles</h2>
             <StyledPostsGrid>

@@ -4,7 +4,7 @@ import { useContext, useState } from "react"
 const DoodlePost = ({post, userLogin, comment, setComment, setLike, like, status, setStatus, errorMessage, setErrorMessage }) => {
     const {setRefetch} = useContext(AllPostsContext) 
     const [hiddenStatus, setHiddenStatus] = useState(true)
-console.log(hiddenStatus)
+
     const handleLikeDoodle = (ev) => {
         ev.preventDefault()
         setLike("Liking!")
