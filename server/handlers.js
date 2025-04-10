@@ -144,6 +144,12 @@ const createUser = async (req, res) => {
 
 const getPosts = async (req, res) => {
     const client = new MongoClient(MONGO_URI)
+    
+    ///// For future use/to test with backend pagination
+    ///// Backend pagination would require another endpoint with user/_id specific posts though
+    // const page = req.query.page || 0
+    // const doodlesPerPage = 5
+    // .skip(page * doodlesPerPage).limit(doodlesPerPage)
 
     try{
         await client.connect()

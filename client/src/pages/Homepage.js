@@ -7,7 +7,7 @@ const Homepage = () => {
         <h2>Welcome to the</h2>
         <h1>Doodle Board</h1>
         <StyledHomepageRules>
-            <h2 style={{maxWidth: "50vw"}}>Make sure you read these simple rules before making an account!</h2>
+            <h2>Make sure you read these simple rules before making an account!</h2>
             <ul className="homepageRules">
                 <li>Be respectful to one another.</li>
                 <li>Keep things pretty SFW!</li>
@@ -21,12 +21,13 @@ const Homepage = () => {
 export default Homepage
 
 const StyledHomepageRules = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    word-break: keep-all;
     width: 100%;
-    max-width: 100dvw;
+    max-width: 75dvw;
     margin: 2rem auto;
     padding: 2rem;
-    h3{
-        font-size: 2rem;
-        font-weight: bold;
-    }
+    text-align: center;
 `

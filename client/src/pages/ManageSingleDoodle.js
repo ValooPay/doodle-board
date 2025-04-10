@@ -10,8 +10,6 @@ const ManageSingleDoodle = () => {
     const { allPosts, setRefetch } = useContext(AllPostsContext)
     const navigate = useNavigate()
     const userAndDoodleId = useParams()
-
-
     
     ///// States
     const [newTitle, setNewTitle] = useState("")
@@ -20,6 +18,7 @@ const ManageSingleDoodle = () => {
     const [status, setStatus] = useState("idle")
     const [errorMessage, setErrorMessage] = useState(null)
     const [image, setImage] = useState(null)
+    const [comments, setComments] = useState(null)
     
     ///// useEffect to set the default values of the inputs
     useEffect(() => {
@@ -33,6 +32,7 @@ const ManageSingleDoodle = () => {
                 setNewDescription(foundPost.description)
                 setShared(foundPost.shared)
                 setImage(foundPost.img)
+                setComments(foundPost.comments)
             }
         }
     }, [])
@@ -115,10 +115,23 @@ const ManageSingleDoodle = () => {
                 </label>
                 <button type="submit" disabled={status !== "idle"} style={{width: "fit-content", margin: "0.5rem auto"}}>Save changes</button>
                 <button type="submit" disabled={status !== "idle"} onClick={handleDelete} style={{width: "fit-content", margin: "0.5rem auto"}}>Delete</button>
+                {errorMessage === null ? <></> : <p>{errorMessage}</p>}
             </form>
             </div> }
         </StyledPostEdit>
-        {errorMessage === null ? <></> : <p>{errorMessage}</p>}
+        <StyledPostComments>
+            <p style={{textAlign: "left", fontWeight: "bold", borderBottom: "2px dashed var(--color-teal2)", padding: "0.5rem"}}>Comments: </p>
+            {comments === null ? <p>Loading...</p> : <div>
+                {comments.map((comment) => {
+                    console.log(comment)
+                    return <div style={{display: "flex", margin: "1rem"}}>
+                        <p style={{textDecoration: "underline", marginRight: "0.25rem"}}>From <span style={{fontWeight: "bold"}}>{comment.fromUser}</span> ({comment.date}) :</p>
+                        <p>{comment.message}</p>
+                    </div>
+                })}
+            </div>
+            }
+        </StyledPostComments>
     </div>
 </>
 }
@@ -128,7 +141,7 @@ export default ManageSingleDoodle
 const StyledPostEdit = styled.div`
     display: flex;
     flex-direction: row;
-    background-color: var(--color-white);
+    background-color: var(--color-honeydew);
     padding: 1rem;
     margin: 3rem;
     border-radius: 5px;
@@ -138,5 +151,18 @@ const StyledPostEdit = styled.div`
     img{
         max-width: 50%;
         border: dashed 1px var(--color-teal1);
+        background-color: var(--color-white);
     }
+`
+
+const StyledPostComments = styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-honeydew);
+    padding: 1rem;
+    margin: 3rem;
+    border-radius: 5px;
+    border: dashed 2px var(--color-teal1);
+    max-width: 100%;
+    justify-content: space-around;
 `

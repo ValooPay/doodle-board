@@ -23,15 +23,15 @@
 - X Sort drawings by newest posted
 - X Fix "rendered more hooks than previous render" in ManageSingleDoodle
 - X Add comments & like button to posts
-- Pagination for the posts page
-- On click, zoom in on drawing/make it full size (and back to smaller size when clicking on it again)
+- X Pagination for the posts page (Load more, might go back and change it at some point later to work with back-end)
+- X On click, zoom in on drawing/make it full size (and back to smaller size when clicking on it again)
 - Tokens or something for perpetual user login
-- Page of all users ? (Might do this one only if I have time to do profile pages)
 
 # Done, but need sprucing up: 
-- Homepage
-- Post styled component (when viewing posts)
-- "Submit post" page set up with title, comments, drawing, etc.
+- X Homepage
+- X Post styled component (when viewing posts)
+- X "Submit post" page set up with title, comments, drawing, etc.
+- Create drawing page so the menu items/tools are on the sides instead of above
 
 
 
@@ -39,6 +39,7 @@
 
 - More tools on the drawing page if have time
 - Profile page
+- Page of all users ? (Might do this one only if I have time to do profile pages)
 - Search bar
 - Timelapse of the drawing process
 - Going back and editing a drawing made

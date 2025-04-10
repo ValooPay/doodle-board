@@ -7,6 +7,12 @@ const AllPostsProvider = ({children}) => {
     const [allPosts, setAllPosts] = useState(null);
     const [refetch, setRefetch] = useState(0)
 
+    const [visible, setVisible] = useState(5)
+
+    const handleLoadMore = () => {
+        return setVisible(() => visible + 5)
+    }
+
     useEffect(()=>{
         const getPosts = async () => {
             try{
@@ -21,7 +27,7 @@ const AllPostsProvider = ({children}) => {
     }, [refetch])
 
     return (
-    <AllPostsContext.Provider value={{allPosts, setAllPosts, setRefetch}}>
+    <AllPostsContext.Provider value={{allPosts, setAllPosts, setRefetch, handleLoadMore, visible}}>
         {children}
     </AllPostsContext.Provider>
     )

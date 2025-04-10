@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import LilCloud from "../components/LilCloud"
+import BunchOfClouds from "../components/BunchOfClouds"
 
 const NewAccount = () => {
     const [ username, setUsername ] = useState("")
@@ -63,7 +63,7 @@ const NewAccount = () => {
             <p className="errorMessageLogin">{errorMessage}</p>
         </>}
         </div>
-        <LilCloud /> <LilCloud /> <LilCloud /> <LilCloud /> <LilCloud />
+        <BunchOfClouds />
     </div>
 }
 
