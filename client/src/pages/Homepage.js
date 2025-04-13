@@ -3,7 +3,7 @@ import BunchOfClouds from "../components/BunchOfClouds"
 
 const Homepage = () => {
 
-    return <div className="pages" style={{display: "flex", justifyContent: "center", overflowX: "hidden"}}>
+    return <div className="pages" style={{overflowX: "hidden"}}>
         <h2>Welcome to the</h2>
         <h1>Doodle Board</h1>
         <StyledHomepageRules>

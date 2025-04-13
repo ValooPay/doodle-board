@@ -3,11 +3,13 @@ import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { AllPostsContext } from "../contexts/AllPostsContext"
+import { UserSpecificPostsContext } from "../contexts/UserSpecificPosts"
 import styled from "styled-components"
 
 const ManageSingleDoodle = () => {
     const { userLogin } = useContext(UserLoginContext)
     const { allPosts, setRefetch } = useContext(AllPostsContext)
+    const { refetchSpecificPosts, setRefetchSpecificPosts } = useContext(UserSpecificPostsContext)
     const navigate = useNavigate()
     const userAndDoodleId = useParams()
     
@@ -58,6 +60,7 @@ const ManageSingleDoodle = () => {
             }
             else{
                 setRefetch((fetch) => fetch + 1)
+                setRefetchSpecificPosts((fetch) => fetch + 1)
                 setStatus("idle")
                 navigate(`/managedoodles/${userAndDoodleId.user_id}`)
                 return console.log("Updated succesfully!")
@@ -88,6 +91,7 @@ const ManageSingleDoodle = () => {
             }
             else{
                 setRefetch((fetch) => fetch + 1)
+                setRefetchSpecificPosts((fetch) => fetch + 1)
                 setStatus("idle")
                 navigate(`/managedoodles/${userAndDoodleId.user_id}`)
                 return <p>Successfully deleted!</p>
@@ -111,7 +115,7 @@ const ManageSingleDoodle = () => {
                     <textarea type="text" id="newDescription" onChange={(ev) => {setNewDescription(ev.target.value)}} placeholder="Description" defaultValue={newDescription} ></textarea>
                 </label>
                 <label htmlFor="sharedSwitch" style={{display: "flex", justifyContent: "left", margin: "0.5rem"}}> Share your doodle?: 
-                    <input onClick={() => {shared === true ? setShared(false) : setShared(true)}} defaultChecked={shared === true} id="sharedSwitch" type="checkbox" style={{marginLeft: "1rem"}}></input>
+                    <input onClick={() => {shared === true ? setShared(false) : setShared(true)}} checked={shared} id="sharedSwitch" type="checkbox" style={{marginLeft: "1rem"}}></input>
                 </label>
                 <button type="submit" disabled={status !== "idle"} style={{width: "fit-content", margin: "0.5rem auto"}}>Save changes</button>
                 <button type="submit" disabled={status !== "idle"} onClick={handleDelete} style={{width: "fit-content", margin: "0.5rem auto"}}>Delete</button>
@@ -123,8 +127,7 @@ const ManageSingleDoodle = () => {
             <p style={{textAlign: "left", fontWeight: "bold", borderBottom: "2px dashed var(--color-teal2)", padding: "0.5rem"}}>Comments: </p>
             {comments === null ? <p>Loading...</p> : <div>
                 {comments.map((comment) => {
-                    console.log(comment)
-                    return <div style={{display: "flex", margin: "1rem"}}>
+                    return <div style={{display: "flex", margin: "1rem"}} key={comment.message}>
                         <p style={{textDecoration: "underline", marginRight: "0.25rem"}}>From <span style={{fontWeight: "bold"}}>{comment.fromUser}</span> ({comment.date}) :</p>
                         <p>{comment.message}</p>
                     </div>

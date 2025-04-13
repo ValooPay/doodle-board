@@ -45,6 +45,7 @@ button:hover{
 button:active{
     background-color: var(--color-orange2);
     border-style: inset;
+    transform: scale(0.95);
 }
 button:disabled{
     opacity: 50%;
@@ -72,11 +73,12 @@ a{
     text-decoration: none;
 }
 a:hover{
-    color: white;
+    color: var(--color-white);
     cursor: pointer;
 }
 a:active{
-    color: yellow;
+    color: var(--color-peach2);
+    transform: scale(0.95);
 }
 
 li{

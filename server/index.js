@@ -5,7 +5,7 @@ const PORT = 4000;
 
 const app = express();
 
-const { getUsers, getUserLogin, getUserLoginCheck, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost } = require("./handlers")
+const { getUsers, getUserLogin, getUserLoginCheck, createUser, getPosts, getUserSpecificPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost } = require("./handlers")
 
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -22,6 +22,7 @@ app.post("/signup", createUser);
 
 ///// GET POSTS & MAKE A NEW POST
 app.get("/posts", getPosts);
+app.get("/posts/:userId", getUserSpecificPosts);
 app.post("/newpost", createPost);
 
 ///// EDIT POST

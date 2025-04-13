@@ -11,13 +11,15 @@ const CreateNewDrawing = () => {
     const [lineWidth, setLineWidth] = useState(5);
     const [lineColor, setLineColor] = useState("black");
     const [lineOpacity, setLineOpacity] = useState(0.1);
-    const [postingStatus, setPostingStatus] = useState("idle")
-    const [errorMessage, setErrorMessage] = useState(null)
-    const { userLogin } = useContext(UserLoginContext)
-    const { setRefetch } = useContext(AllPostsContext)
-    const navigate = useNavigate()
+    const [postingStatus, setPostingStatus] = useState("idle");
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [brushStatus, setBrushStatus] = useState(true);
+    const [eraserStatus, setEraserStatus] = useState(false);
+    const { userLogin } = useContext(UserLoginContext);
+    const { setRefetch } = useContext(AllPostsContext);
+    const navigate = useNavigate();
 
-    
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -57,7 +59,9 @@ const CreateNewDrawing = () => {
         ctxRef.current.stroke();
     }
 
-    ///// Button function for saving drawing
+
+    // BUTTONS
+    ///// Button function for saving drawing (in the app) & pushing to the backend
     const finishDrawing = (ev) => {
         ev.preventDefault()
         const canvas = canvasRef.current;
@@ -90,10 +94,40 @@ const CreateNewDrawing = () => {
         })
     }
 
+    ///// Button to switch to drawing/brush
+    const setToDraw = () => {
+        ctxRef.current.globalCompositeOperation = "source-over";
+        setBrushStatus(true)
+        setEraserStatus(false)
+    }
+
+    ///// Button to switch to erasing
+    const setToErase = () => {
+        ctxRef.current.globalCompositeOperation = "destination-out";
+        setEraserStatus(true)
+        setBrushStatus(false)
+    }
+
+    ///// Button to clear the entire canvas
+    const clearCanvas = () => {
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext("2d")
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
     return (
         <div className="pages" style={{margin: "0 auto"}}>
             <div className="drawingApp">
-            <Menu setLineColor={setLineColor} setLineWidth={setLineWidth} setLineOpacity={setLineOpacity} />
+                <Menu 
+                setLineColor={setLineColor} 
+                setLineWidth={setLineWidth} 
+                setLineOpacity={setLineOpacity} 
+                setToDraw={setToDraw} 
+                setToErase={setToErase} 
+                brushStatus={brushStatus}
+                eraserStatus={eraserStatus}
+                clearCanvas={clearCanvas}
+                />
                 <div className="draw-area">
                     <canvas onPointerDown={startDrawing} onPointerUp={endDrawing} onPointerMove={draw} ref={canvasRef} width={`1280px`} height={`720px`} />
                 </div>
@@ -105,7 +139,3 @@ const CreateNewDrawing = () => {
 }
 
 export default CreateNewDrawing
-
-
-// Don't think I need this for the image
-            // window.location.href=img;

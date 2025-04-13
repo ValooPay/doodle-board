@@ -158,7 +158,7 @@ const getUserLoginCheck = async (req, res) => {
             message: "Missing user id & or timestamp"
         })
     }
-    if((currentDate - timestamp) > 1209600){
+    if((currentDate - timestamp) > 1209600000){
         return res.status(408).json({
             status: 408,
             message: "Connection timed out -- Please log in again"
@@ -239,6 +239,37 @@ const getPosts = async (req, res) => {
     }
 }
 
+const getUserSpecificPosts = async (req, res) => {
+    const client = new MongoClient(MONGO_URI)
+    const { userId } = req.params
+
+    try{
+        await client.connect()
+        const db = client.db(DB)
+        const userPosts = await db.collection(POSTS_COLLECTION).find( {user_id: userId} ).toArray()
+        if(userPosts.length === 0){
+            return res.status(404).json({
+                status: 404,
+                message: "No posts found for this user"
+            })
+        }
+        res.status(200).json({
+            status: 200,
+            data: userPosts
+        })
+    }
+    catch(error){
+        console.error("Error fetching posts", error)
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+    }
+    finally {
+        await client.close()
+    }
+}
+
 const createPost = async (req, res) => {
     const { username, user_id, img } = req.body
     const _id = uuidv4()
@@ -291,11 +322,12 @@ const editPost = async (req, res) => {
     const { newTitle, newDescription, shared } = req.body;
     const userId = req.params.userId;
     const doodleId = req.params.doodleId
+    const updatedDate = new Date()
 
     try{
         await client.connect()
         const db = client.db(DB)
-        const updatedPost = await db.collection(POSTS_COLLECTION).updateOne({_id: doodleId, user_id: userId}, {$set: {title: newTitle, description: newDescription, shared: shared }})
+        const updatedPost = await db.collection(POSTS_COLLECTION).updateOne({_id: doodleId, user_id: userId}, {$set: {title: newTitle, description: newDescription, shared: shared, date: updatedDate }})
 
         if(updatedPost.matchedCount === 0){
             return res.status(404).json({
@@ -550,4 +582,4 @@ const deletePost = async (req, res) => {
 }
 
 
-module.exports = { getUsers, getUserLogin, getUserLoginCheck, createUser, getPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost };
+module.exports = { getUsers, getUserLogin, getUserLoginCheck, createUser, getPosts, getUserSpecificPosts, createPost, editPost, likePost, unlikePost, commentOnPost, removeCommentFromPost, deletePost };

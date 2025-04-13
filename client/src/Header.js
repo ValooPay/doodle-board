@@ -47,21 +47,23 @@ const Header = () => {
     return <> 
     <StyledHeader>
         {userLogin === null ? <>
-        <Link to="/" style={{margin: "auto 0"}}>Home</Link>
+        <Link to="/">Home</Link>
         <StyledLoginSignup>
             <form onSubmit={handleSubmit}>
-                <label className="headerSpacing" htmlFor="usernameInput">Username: <input onChange={(ev) => {setLoginUsername(ev.target.value)}} id="usernameInput" type="text" placeholder="Your Username"></input></label>
-                <label className="headerSpacing" htmlFor="passwordInput">Password: <input onChange={(ev) => {setLoginPassword(ev.target.value)}} id="passwordInput" type="password" placeholder="Your Password"></input></label>
+                <label className="headerSpacing" htmlFor="usernameInput">Username: <input onChange={(ev) => {setLoginUsername(ev.target.value); setErrorMessage(null)}} id="usernameInput" type="text" placeholder="Your Username"></input></label>
+                <label className="headerSpacing" htmlFor="passwordInput">Password: <input onChange={(ev) => {setLoginPassword(ev.target.value); setErrorMessage(null)}} id="passwordInput" type="password" placeholder="Your Password"></input></label>
                 <button disabled={fetchingStatus !== "idle"} type="submit">Log in</button>
             </form>
-            <Link to="/newAccount" style={{margin: "auto 4rem"}}>Sign up</Link>
+            <Link to="/newAccount" style={{margin: "auto 2rem"}}>Sign up</Link>
         </StyledLoginSignup>
         </> : <>
-        <Link to="/posts" style={{margin: "auto 0"}}>Posts</Link>
-        <Link to={`/createdrawing/${userLogin._id}`} style={{display:"flex", marginRight: "auto", marginLeft: "2rem", width:"fit-content"}} >New drawing</Link>
+        <div>
+            <Link to="/posts" style={{margin: "auto 2rem auto 0"}}>Posts</Link>
+            <Link to={`/createdrawing/${userLogin._id}`}>New drawing</Link>
+        </div>
         <StyledLoginSignup>
-        <p style={{marginRight: "1.5rem"}}>Hello <Link to={`/managedoodles/${userLogin._id}`}>{userLogin.username}</Link> !</p> 
-        <Link onClick={logOut}>Log out</Link>
+            <p style={{marginRight: "1.5rem"}}>Hello <Link to={`/managedoodles/${userLogin._id}`}>{userLogin.username}</Link> !</p> 
+            <Link onClick={logOut}>Log out</Link>
         </StyledLoginSignup>
         </>}
     </StyledHeader>
@@ -74,6 +76,7 @@ const Header = () => {
 export default Header
 
 const StyledHeader = styled.div`
+    margin: auto 0;
     display: flex;
     flex-direction: row;
     top: 0;

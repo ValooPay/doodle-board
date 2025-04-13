@@ -45,27 +45,62 @@ const NewAccount = () => {
 
 
     return <div className="pages">
-        <div style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
-            <h2>Sign up</h2>
-        <form onSubmit={handleSubmit} style={{width: "fit-content", margin: "0 auto", backgroundColor: "var(--color-honeydew)", border: "solid 2px var(--color-orange2)", padding: "2rem 2rem 3rem", borderRadius: "20px", color:"var(--color-dark-green)"}}>
-            <label className="signUpLabelsSpacing" htmlFor="usernameSignUpInput">Username: 
-                <input id="usernameSignUpInput" type="text" style={{margin: "0.5rem"}} onChange={(ev) => {setUsername(ev.target.value)}}></input>
-            </label>
-            <label className="signUpLabelsSpacing" htmlFor="passwordSignUpInput">Password: 
-                <input id="passwordSignUpInput" type="password" style={{margin: "0.5rem"}} onChange={(ev) => {setPassword(ev.target.value)}}></input>
-            </label>
-            <label className="signUpLabelsSpacing" htmlFor="emailSignUpInput">Email: 
-                <input id="emailSignUpInput" type="email" style={{margin: "0.5rem"}} onChange={(ev) => {setLoginEmail(ev.target.value)}}></input>
-            </label>
-            <button disabled={fetchingStatus !== "idle"} style={{width: "fit-content", margin: "0 auto"}}>Sign up</button>
-        </form>
-        {errorMessage === null ? <></> : <>
-            <p className="errorMessageLogin">{errorMessage}</p>
-        </>}
-        </div>
+        <StyledSignupForm>
+            <h1>Sign up!</h1>
+            <form onSubmit={handleSubmit} >
+                <label className="signUpLabelsSpacing" htmlFor="usernameSignUpInput">Username: 
+                    <input id="usernameSignUpInput" type="text" onChange={(ev) => {setUsername(ev.target.value)}}></input>
+                </label>
+                <label className="signUpLabelsSpacing" htmlFor="passwordSignUpInput">Password: 
+                    <input id="passwordSignUpInput" type="password" onChange={(ev) => {setPassword(ev.target.value)}}></input>
+                </label>
+                <label className="signUpLabelsSpacing" htmlFor="emailSignUpInput">Email: 
+                    <input id="emailSignUpInput" type="email" onChange={(ev) => {setLoginEmail(ev.target.value)}}></input>
+                </label>
+                <button disabled={fetchingStatus !== "idle"}>Sign up</button>
+            </form>
+            {errorMessage === null ? <></> : <>
+                <div className="errorMessageLogin messageMove">{errorMessage}</div>
+            </>}
+            <h2>& have fun! <span>&#x2600;</span></h2>
+        </StyledSignupForm>
         <BunchOfClouds />
     </div>
 }
 
 export default NewAccount
 
+const StyledSignupForm = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    h1{
+        z-index: 1;
+        margin-bottom: 3rem;
+    }
+    h2{
+        margin: 3rem 0;
+    }
+    form{
+        margin: 0 auto;
+        background-color: var(--color-honeydew);
+        border: solid 2px var(--color-orange2);
+        border-radius: 30px;
+        padding: 1rem 1rem 2rem;
+        z-index: 1;
+    }
+    input{
+        margin: 0.5rem;
+    }
+    span{
+        color: gold;
+    }
+    .messageMove{
+        position: static;
+        right: auto;
+        margin: auto;
+        border-radius: 20px;
+        padding: 1.5rem;
+    }
+`

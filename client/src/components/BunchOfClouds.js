@@ -1,7 +1,9 @@
 import LilCloud from "./LilCloud"
+import React from "react"
+import { memo } from "react"
 
 const BunchOfClouds = () => {
-    return <div>
+    return <div style={{position: "fixed", zIndex: "-1"}}>
         <LilCloud delay={-3} />
         <LilCloud delay={-6} />
         <LilCloud delay={-9} />
@@ -10,4 +12,4 @@ const BunchOfClouds = () => {
     </div>
 }
 
-export default BunchOfClouds
+export default memo(BunchOfClouds)

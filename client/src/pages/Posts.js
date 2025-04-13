@@ -10,13 +10,12 @@ const Posts = () => {
     const {userLogin} = useContext(UserLoginContext)
     const [status, setStatus] = useState("idle")
     const [comment, setComment] = useState("")
-    const [like, setLike] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
 
     return <div className="pages">
-        <h1 style={{margin: "3rem 0"}}>Doodles</h1>
-        {/* <BunchOfClouds /> */}
+        <h1 style={{margin: "2rem 0 3rem"}}>Doodles</h1>
+        <BunchOfClouds />
         {allPosts === null ? <p>Loading...</p> : <>
             {allPosts.filter((post) => post.shared === true).slice(0, visible).map((post) => {
                 return <StyledPost key={post._id}>
@@ -25,8 +24,6 @@ const Posts = () => {
                         userLogin={userLogin} 
                         comment={comment}
                         setComment={setComment} 
-                        setLike={setLike} 
-                        like={like}
                         status={status}
                         setStatus={setStatus}
                         errorMessage={errorMessage}
@@ -35,7 +32,7 @@ const Posts = () => {
                 </StyledPost>
             })}
             <div>
-                {allPosts.filter((post) => post.shared === true).length <= visible === true ? <p style={{margin: "auto auto 2rem"}}>You're reached the end! Aww...</p> : <></>}
+                {allPosts.filter((post) => post.shared === true).length <= visible === true ? <p style={{margin: "auto auto 2rem", fontWeight: "bold"}}>You're reached the end! Aww...</p> : <></>}
                 <button className="loadMoreButton" id="loadMoreButton" disabled={allPosts.filter((post) => post.shared === true).length <= visible} onClick={handleLoadMore} type="button">Load more</button> 
             </div>
         </>}

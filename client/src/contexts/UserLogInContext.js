@@ -33,7 +33,6 @@ const UserLoginProvider = ({children}) => {
             fetch("/autologin", options)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 if(data.status !== 200){
                     localStorage.removeItem("timestamp")
                     throw new Error(data.message)
@@ -47,13 +46,6 @@ const UserLoginProvider = ({children}) => {
                 setErrorMessage(err.message)
             })
         }
-        ///// test if storedTimestamp & storedId exist
-        ///// if they don't exist, you don't have to do anything
-        ///// if they do, parse them (put storedTimestamp back as number (JSON.parse))
-        ///// fetch to endpoint (autologin)
-        ///// if 200, then execute login method & pass user object on the server
-        ///// else delete timestamp from localstorage
-        ///// after, go to each page & refresh page to see if it breaks or if it navigates away when auto-login is happening (will probably have to make a useState to set it to autologin, see if that's taking place, so the frontend won't navigate away if that's happening)
     }, [])
     
     return (

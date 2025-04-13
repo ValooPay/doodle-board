@@ -1,9 +1,12 @@
 import { AllPostsContext } from "../contexts/AllPostsContext"
 import { useContext, useState } from "react"
+import styled from "styled-components"
+import { format } from 'date-format-parse'
 
-const DoodlePost = ({post, userLogin, comment, setComment, setLike, like, status, setStatus, errorMessage, setErrorMessage }) => {
+const DoodlePost = ({post, userLogin, comment, setComment, status, setStatus, errorMessage, setErrorMessage }) => {
     const {setRefetch} = useContext(AllPostsContext) 
     const [hiddenStatus, setHiddenStatus] = useState(true)
+    const [like, setLike] = useState("")
 
     const handleLikeDoodle = (ev) => {
         ev.preventDefault()
@@ -105,16 +108,16 @@ const DoodlePost = ({post, userLogin, comment, setComment, setLike, like, status
 
     
 return <div key={post._id}>
-                    <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed var(--color-teal2)", paddingBottom: "1rem" }}>
+                    <StyledPostContainerTop>
                         <div style={{display: "flex", alignItems: "center"}}>
-                            <p style={{fontWeight: "bold"}}>User: <span style={{fontWeight: "normal"}}>{post.username}</span></p>
-                            <p style={{fontWeight: "bold", margin: "0 1rem"}}>Title: <span style={{fontWeight: "normal"}}>{post.title}</span></p>
+                            <p>User: <span>{post.username}</span></p>
+                            <p style={{margin: "0 1rem"}}>Title: <span>{post.title}</span></p>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
-                            <p style={{fontWeight: "bold"}}>Date: <span style={{fontWeight: "normal"}}>{post.date}</span></p>
+                            <p>Date: <span>{format(post.date, "YYYY-MM-DD HH:mm:ss")}</span></p>
                             {userLogin === null ? <></> : post.liked.includes(userLogin._id) === false ? 
                                 <div>
-                                    <button className="likeButton" onClick={handleLikeDoodle}>♡</button>
+                                    <button className="likeButton grayedout" onClick={handleLikeDoodle}>♡</button>
                                     <p style={{position: "absolute"}}>{like}</p>
                                 </div> 
                                 :
@@ -124,20 +127,20 @@ return <div key={post._id}>
                                 </div>
                             }
                         </div>
-                    </div>
+                    </StyledPostContainerTop>
                     
-                    <div style={{display: "flex", margin: "1rem 0"}}>
-                        <p style={{fontWeight: "bold", wordBreak: "keep-all"}}>Description: </p>
-                        <span style={{fontWeight: "normal", marginLeft: "0.5rem", textAlign: "left"}}>{post.description}</span>
-                    </div>
+                    <StyledPostContainerDesc>
+                        <p>Description: </p>
+                        <span>{post.description}</span>
+                    </StyledPostContainerDesc>
 
                     <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
-                        <div onClick={() => {hiddenStatus === true ? setHiddenStatus(false) : hiddenStatus}} className="responsive">
+                        
+                        <div className="responsive">
                             <div className="postImg">
-                                <img src={post.img} style={{height: "auto", width: "100%", backgroundColor: "white", border: "dashed 1px var(--color-teal2)"}} />
+                                <img onClick={() => {hiddenStatus === true ? setHiddenStatus(false) : hiddenStatus}} src={post.img} style={{height: "auto", width: "100%", backgroundColor: "white", border: "dashed 1px var(--color-teal2)", cursor: "pointer"}} />
                             </div>
                         </div>
-                        
                         {hiddenStatus === true ? <></> : 
                             <div className="postImgEnlarged">
                                 <button style={{position: "absolute", right: "2rem", top: "2rem"}} onClick={() => {hiddenStatus === false ? setHiddenStatus(true) : hiddenStatus}}>X Close</button>
@@ -145,34 +148,93 @@ return <div key={post._id}>
                             </div>
                         }
 
-                        <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between", textAlign: "left", width: "100%", padding: "1rem", border: "1px dashed var(--color-teal2)", marginLeft: "1rem"}}>
-                            <p style={{fontWeight: "bold"}}>Comments: </p>
-                            {post.comments.map((comment) => {
-                                return <div key={comment.date} style={{fontWeight: "normal", padding: "0.5rem 0 ", borderBottom: "dashed 2px var(--color-teal1)"}}>
-                                    <div style={{display: "flex", justifyContent: "space-between", marginBottom: "0.2rem"}}>
-                                        <div style={{display: "flex"}}>
-                                            <p style={{fontWeight: "bold", textDecoration: "underline 1px",  marginRight: "0.5rem"}}>{comment.fromUser}</p>
-                                            <p style={{textDecoration: "underline 1px"}}>( {comment.date} ) commented : </p>
+                        <StyledPostContainerComments>
+                            <p>Comments: </p>
+                            <div style={{display: "flex", height: "100%", flexDirection: "column", justifyContent: "space-between"}}>
+                                <div>
+                                    {post.comments.map((comment) => {
+                                        return <div key={comment.date} style={{padding: "0.5rem 0", borderBottom: "dashed 2px var(--color-teal1)"}}>
+                                            <div style={{display: "flex", justifyContent: "space-between"}}>
+                                                <div style={{display: "flex"}}>
+                                                    <p>{comment.fromUser}</p>
+                                                    <p>( {format(comment.date, "YYYY-MM-DD HH:mm:ss")} ) commented : </p>
+                                                </div>
+                                                {userLogin !== null && userLogin.username === comment.fromUser ? 
+                                                    <button className="deleteCommentButton" onClick={() => {handleRemoveComment(comment)}}>X</button> : <></>}
+                                            </div>
+                                            <span>{comment.message}</span>
+                                                
                                         </div>
-                                        {userLogin !== null && userLogin.username === comment.fromUser ? 
-                                            <button className="deleteCommentButton" onClick={() => {handleRemoveComment(comment)}}>X</button> : <></>}
-                                    </div>
-                                    <p style={{margin: "0.75rem auto 0.25rem"}}>{comment.message}</p>
-                                    
+                                    })}
                                 </div>
-                            })}
-                            
-                            {userLogin === null ? <></> : 
-                            <form onSubmit={handlePostComment} style={{alignSelf: "end", width: "100%"}}>
-                                <label style={{display: "flex", justifyContent: "center", marginTop: "1rem"}}>
-                                    <textarea style={{width: "100%"}} type="text" onChange={(ev) => {setComment(ev.target.value)}}></textarea>
-                                    <button disabled={status !== "idle"} style={{margin: "0 1rem"}}>Add comment</button>
-                                </label>
-                            </form>
-                            }
-                        </div>
+                                {userLogin === null ? <></> : 
+                                <form onSubmit={handlePostComment}>
+                                    <label>
+                                        <textarea style={{width: "100%"}} type="text" onChange={(ev) => {setComment(ev.target.value)}}></textarea>
+                                        <button disabled={status !== "idle"} style={{margin: "0 1rem"}}>Add comment</button>
+                                    </label>
+                                </form>
+                                }
+                            </div>
+                        </StyledPostContainerComments>
                     </div>
                 </div>
 }
 
 export default DoodlePost
+
+const StyledPostContainerTop = styled.div`
+display: flex; 
+justify-content: space-between; 
+align-items: center; 
+border-bottom: 1px dashed var(--color-teal2); 
+padding-bottom: 1rem;
+p{
+    font-weight: bold;
+}
+span{
+    font-weight: normal;
+}
+`
+const StyledPostContainerDesc = styled.div`
+display: flex; 
+margin: 1rem 0;
+p{
+    font-weight: bold;
+    word-break: keep-all
+}
+span{
+    font-weight: normal;
+    text-align: left;
+    margin-left: 0.5rem;
+}
+`
+
+const StyledPostContainerComments = styled.div`
+display: flex; 
+flex-direction: column;
+/* justify-content: space-between; */
+text-align: left;
+width: 100%;
+padding: 1rem;
+border: 1px dashed var(--color-teal2);
+margin-left: 1rem;
+p{
+    font-weight: bold;
+    word-break: keep-all
+}
+span{
+    font-weight: normal;
+    text-align: left;
+    margin-left: 0.5rem;
+}
+form{
+    align-self: flex-end;
+    width: 100%;
+}
+label{
+    display: flex; 
+    justify-content: center; 
+    margin-top: 1rem;
+}
+`
