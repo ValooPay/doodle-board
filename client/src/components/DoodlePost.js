@@ -7,7 +7,7 @@ const DoodlePost = ({post, userLogin, comment, setComment, status, setStatus, er
     const {setRefetch} = useContext(AllPostsContext) 
     const [hiddenStatus, setHiddenStatus] = useState(true)
     const [like, setLike] = useState("")
-
+console.log(post.img)
     const handleLikeDoodle = (ev) => {
         ev.preventDefault()
         setLike("Liking!")
@@ -139,6 +139,7 @@ return <div key={post._id}>
                         <div className="responsive">
                             <div className="postImg">
                                 <img onClick={() => {hiddenStatus === true ? setHiddenStatus(false) : hiddenStatus}} src={post.img} style={{height: "auto", width: "100%", backgroundColor: "white", border: "dashed 1px var(--color-teal2)", cursor: "pointer"}} />
+                                <a className="anchorDownloadImage" href={post.img} download="image.png">Download image</a>
                             </div>
                         </div>
                         {hiddenStatus === true ? <></> : 

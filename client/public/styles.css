@@ -220,9 +220,16 @@ canvas{
     border: none;
     background-color: transparent;
 }
-/* .colorInput::-webkit-color-swatch{
-    border-radius: 50%;
-} */
+
+.anchorDownloadImage{
+    color: var(--color-peach2);
+    font-weight: bold;
+    text-shadow: 2px 2px 1px var(--color-peach1);
+}
+.anchorDownloadImage:hover{
+    color: var(--color-bittersweet);
+    text-shadow: 1px 1px 1px var(--color-teal1);
+}
 
 /*FUN CLOUD THINGS*/
 .cloud{
