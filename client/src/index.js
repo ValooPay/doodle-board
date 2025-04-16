@@ -3,16 +3,16 @@ import App from "./App";
 import AllUsersProvider from "./contexts/UsersContext";
 import UserLoginProvider from "./contexts/UserLogInContext";
 import AllPostsProvider from "./contexts/AllPostsContext";
-import UserSpecificPostsProvider from "./contexts/UserSpecificPosts";
+import UserSpecificPostsProvider from "./contexts/UserSpecificPostsContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <AllUsersProvider>
-        <UserLoginProvider>
-            <AllPostsProvider>
+        <AllPostsProvider>
+            <UserLoginProvider>
                 <UserSpecificPostsProvider>
                     <App />
                 </UserSpecificPostsProvider>
-            </AllPostsProvider>
-        </UserLoginProvider>
+            </UserLoginProvider>
+        </AllPostsProvider>
     </AllUsersProvider>
 )

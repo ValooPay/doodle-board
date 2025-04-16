@@ -3,13 +3,13 @@ import { useContext, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { AllPostsContext } from "../contexts/AllPostsContext"
-import { UserSpecificPostsContext } from "../contexts/UserSpecificPosts"
+import { UserSpecificPostsContext } from "../contexts/UserSpecificPostsContext"
 import styled from "styled-components"
 
 const ManageSingleDoodle = () => {
     const { userLogin } = useContext(UserLoginContext)
     const { allPosts, setRefetch } = useContext(AllPostsContext)
-    const { refetchSpecificPosts, setRefetchSpecificPosts } = useContext(UserSpecificPostsContext)
+    const { setRefetchSpecificPosts } = useContext(UserSpecificPostsContext)
     const navigate = useNavigate()
     const userAndDoodleId = useParams()
     

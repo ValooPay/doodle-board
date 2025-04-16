@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 export const UserLoginContext = React.createContext();
 
@@ -7,6 +7,7 @@ const UserLoginProvider = ({children}) => {
     const [userLogin, setUserLogin] = useState(null);
     const [errorMessage, setErrorMessage] = useState("")
     const [autoLoginStatus, setAutoLoginStatus] = useState(false)
+    const [refetchUser, setRefetchUser] = useState(0)
 
     const logIn = (user) => {
         return setUserLogin(user)
@@ -46,10 +47,10 @@ const UserLoginProvider = ({children}) => {
                 setErrorMessage(err.message)
             })
         }
-    }, [])
+    }, [refetchUser])
     
     return (
-    <UserLoginContext.Provider value={{userLogin, logIn, logOut, autoLoginStatus}}>
+    <UserLoginContext.Provider value={{userLogin, logIn, logOut, autoLoginStatus, setRefetchUser}}>
         {children}
     </UserLoginContext.Provider>
     )

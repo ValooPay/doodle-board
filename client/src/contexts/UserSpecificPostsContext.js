@@ -9,9 +9,9 @@ const UserSpecificPostsProvider = ({children}) => {
     const [userSpecificPosts, setUserSpecificPosts] = useState(null);
     const [refetchSpecificPosts, setRefetchSpecificPosts] = useState(0)
     const {userLogin} = useContext(UserLoginContext)
-    
+    const {refetch} = useContext(AllPostsContext)
+
     useEffect(() => {
-        if(userLogin !== null){
             const getUserSpecificPosts = async () => {
                 try{
                     const res = await fetch (`/posts/${userLogin._id}`)
@@ -22,11 +22,10 @@ const UserSpecificPostsProvider = ({children}) => {
                 }
             }
             getUserSpecificPosts();
-        }
-    }, [userLogin, refetchSpecificPosts])
+    }, [userLogin, refetchSpecificPosts, refetch])
 
     return(
-        <UserSpecificPostsContext.Provider value={{userSpecificPosts, setRefetchSpecificPosts}}>
+        <UserSpecificPostsContext.Provider value={{userSpecificPosts, refetchSpecificPosts, setRefetchSpecificPosts}}>
             {children}
         </UserSpecificPostsContext.Provider>
     )

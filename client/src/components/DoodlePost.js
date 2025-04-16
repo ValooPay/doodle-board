@@ -1,15 +1,18 @@
 import { AllPostsContext } from "../contexts/AllPostsContext"
-import { useContext, useState } from "react"
+import { UserSpecificPostsContext } from "../contexts/UserSpecificPostsContext"
+import { UserLoginContext } from "../contexts/UserLogInContext"
+import { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 import { format } from 'date-format-parse'
 
 const DoodlePost = ({post, userLogin, comment, setComment, status, setStatus, errorMessage, setErrorMessage }) => {
     const {setRefetch} = useContext(AllPostsContext) 
+    const {setRefetchSpecificPosts} = useContext(UserSpecificPostsContext)
+    const { setRefetchUser } = useContext(UserLoginContext)
     const [hiddenStatus, setHiddenStatus] = useState(true)
     const [like, setLike] = useState("")
-console.log(post.img)
-    const handleLikeDoodle = (ev) => {
-        ev.preventDefault()
+
+    const handleLikeDoodle = () => {
         setLike("Liking!")
         const body = JSON.stringify({userId: userLogin._id, postId: post._id})
         const options = {
@@ -22,17 +25,24 @@ console.log(post.img)
         fetch(`/like/${post._id}/${userLogin._id}`, options)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            setRefetch((fetch) => fetch + 1)
-            setLike("")
+            if(data.status !== 200){
+                setStatus("Error liking post")
+                throw new Error(data.message)
+            }
+            else {
+                console.log(data)
+                setRefetch((fetch) => fetch + 1)
+                setRefetchUser((fetch) => fetch + 1)
+                setRefetchSpecificPosts((fetch) => fetch + 1)
+                setLike("")
+            }
         })
         .catch(err => {
             setErrorMessage(err.message)
         })
     }
 
-    const handleUnlikeDoodle = (ev) => {
-        ev.preventDefault()
+    const handleUnlikeDoodle = () => {
         setLike("Removing like...")
         const body = JSON.stringify({userId: userLogin._id, postId: post._id})
         const options = {
@@ -45,9 +55,17 @@ console.log(post.img)
         fetch(`/unlike/${post._id}/${userLogin._id}`, options)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            setRefetch((fetch) => fetch + 1)
-            setLike("")
+            if(data.status !== 200){
+                setStatus("Error unliking post")
+                throw new Error(data.message)
+            }
+            else {
+                console.log(data)
+                setRefetch((fetch) => fetch + 1)
+                setRefetchUser((fetch) => fetch + 1)
+                setRefetchSpecificPosts((fetch) => fetch + 1)
+                setLike("")
+            }
         })
         .catch(err => {
             setErrorMessage(err.message)
@@ -85,7 +103,6 @@ console.log(post.img)
         }
 
     const handleRemoveComment = (comment) => {
-        console.log(comment)
         const body = JSON.stringify({ postId: post._id, username: comment.fromUser, date: comment.date, message: comment.message })
         const options = {
             method: "PATCH",
@@ -117,12 +134,12 @@ return <div key={post._id}>
                             <p>Date: <span>{format(post.date, "YYYY-MM-DD HH:mm:ss")}</span></p>
                             {userLogin === null ? <></> : post.liked.includes(userLogin._id) === false ? 
                                 <div>
-                                    <button className="likeButton grayedout" onClick={handleLikeDoodle}>♡</button>
+                                    <button className="likeButton grayedout" type="button" onClick={handleLikeDoodle}>♡</button>
                                     <p style={{position: "absolute"}}>{like}</p>
                                 </div> 
                                 :
                                 <div>
-                                    <button className="likeButton" onClick={handleUnlikeDoodle}>♥</button>
+                                    <button className="likeButton" type="button" onClick={handleUnlikeDoodle}>♥</button>
                                     <p style={{position: "absolute"}}>{like}</p>
                                 </div>
                             }

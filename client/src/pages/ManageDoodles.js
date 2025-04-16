@@ -3,11 +3,11 @@ import { useContext } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate, Link } from "react-router-dom"
 import { AllPostsContext } from "../contexts/AllPostsContext"
-import { UserSpecificPostsContext } from "../contexts/UserSpecificPosts"
+import { UserSpecificPostsContext } from "../contexts/UserSpecificPostsContext"
 import styled from "styled-components"
 
 const ManageDoodles = () => {
-    const { userLogin, autoLoginStatus } = useContext(UserLoginContext)
+    const { userLogin } = useContext(UserLoginContext)
     const { allPosts } = useContext(AllPostsContext)
     const { userSpecificPosts } = useContext(UserSpecificPostsContext)
     const objectId = useParams()
