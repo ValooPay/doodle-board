@@ -6,7 +6,6 @@ export const AllPostsContext = React.createContext();
 const AllPostsProvider = ({children}) => {
     const [allPosts, setAllPosts] = useState(null);
     const [refetch, setRefetch] = useState(0)
-
     const [visible, setVisible] = useState(5)
 
     const handleLoadMore = () => {

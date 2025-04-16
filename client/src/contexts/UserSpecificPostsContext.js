@@ -14,9 +14,11 @@ const UserSpecificPostsProvider = ({children}) => {
     useEffect(() => {
             const getUserSpecificPosts = async () => {
                 try{
-                    const res = await fetch (`/posts/${userLogin._id}`)
-                    const {data} = await res.json();
-                    setUserSpecificPosts(data)
+                    if(userLogin !== null){
+                        const res = await fetch (`/posts/${userLogin._id}`)
+                        const {data} = await res.json();
+                        setUserSpecificPosts(data)
+                    }
                 } catch (err) {
                     console.error(err)
                 }

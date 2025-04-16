@@ -7,6 +7,7 @@ import CreateNewDrawing from "./pages/CreateNewDrawing"
 import ManageDoodles from "./pages/ManageDoodles"
 import ManageSingleDoodle from "./pages/ManageSingleDoodle"
 import GlobalStyles from "./components/GlobalStyles"
+import SinglePost from "./pages/SinglePost"
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
             <Route path="/" element={<Homepage />} />
             <Route path="/newAccount" element={<NewAccount />} />
             <Route path="/posts" element={<Posts />} />
+            <Route path="/posts/:_id" element={<SinglePost />} />
             <Route path="/createdrawing/:_id" element={<CreateNewDrawing />} />
             <Route path="/managedoodles/:user_id" element={<ManageDoodles />} />
             <Route path="/managedoodles/:user_id/:_id" element={<ManageSingleDoodle />} />

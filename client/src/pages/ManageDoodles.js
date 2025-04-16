@@ -43,7 +43,7 @@ const ManageDoodles = () => {
             <StyledPostsGrid>
                 {allPosts.map((post) => {
                     if(userLogin.likedPosts.includes(post._id)){
-                        return <img src={post.img} key={post.img}></img>
+                        return <Link to={`/posts/${post._id}`} key={post.img}><img src={post.img} ></img></Link>
                     }
                 })}
             </StyledPostsGrid>
