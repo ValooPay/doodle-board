@@ -37,6 +37,7 @@ const Header = () => {
                 setFetchingStatus("idle")
                 localStorage.setItem("timestamp", JSON.stringify(data.timestamp))
                 localStorage.setItem("userId", JSON.stringify(data.data._id))
+                navigate("/posts")
             }
         })
         .catch(err => {

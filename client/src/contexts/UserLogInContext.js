@@ -1,11 +1,11 @@
 import React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 export const UserLoginContext = React.createContext();
 
 const UserLoginProvider = ({children}) => {
     const [userLogin, setUserLogin] = useState(null);
-    const [errorMessage, setErrorMessage] = useState("")
+    const [setErrorMessage] = useState("")
     const [autoLoginStatus, setAutoLoginStatus] = useState(false)
     const [refetchUser, setRefetchUser] = useState(0)
 

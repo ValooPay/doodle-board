@@ -9,8 +9,50 @@ When I was a kid, just surfing the web aimlessly as you do in the early 2000s, I
 
 Oekaki boards have always held a special place in my heart, I've met some wonderful people through it and learned so much from my experiences... So, I wanted to see if I could recreate something similar for my final project!
 
-I wanted to keep things fairly simple. You can sign up, log in and start doodling right away! People can like your doodles & comment on them. You can manage the doodles you've created, whether shared or not (hidden!), and also check the ones you've liked!
+Hope you enjoy this silly little website!! 🌞
 
-The canvas to draw on is fairly simple for now, as I wanted to focus on the functionality of the website a little more, but I'd really love to update it in the future!! Not just the create drawing either, I'd like to expand more things on it for the fun of it. You can see some of the things I was considering in the To-Dos Tasks document if you're curious. But for now, this is it!! If I do add anything, I will update this file :D
+### Preview
 
-Hope you enjoy this silly little website!! :)
+Quick preview & walkthrough: 
+https://youtu.be/7Tyty6oGY-o?si=_-HPuvkv8i6a4Yjv
+
+### Features
+
+- Sign up & Log in
+- Create new drawing (when logged in)
+- View all posts
+- View shared/hidden posts made by logged in user & their liked posts
+- Update post (Title, description, share status, delete post)
+- Post comment & delete comment
+- Like & unlike post
+
+### Tech
+
+- **Database**: MongoDB (check DATABASE_DOCUMENTATION.md for details)
+- **Frontend**: HTML, CSS, Javascript, React
+- **Backend**: Node.js, Express.js
+
+### Endpoints
+
+#### **Users**
+
+| URL | Method | Description | 200 Response | Unsuccessful status codes |
+| --- | --- | --- | --- | --- |
+| `"/users"` | `GET` | Returns array of all the users (username & created posts) | `{data: allUsers}` | 404, 500 |
+| `"/userlogin"` | `POST` | Logs in user upon finding match in database | `{data: userLogin, timestamp: loginDate}` | 400, 404, 500 |
+| `"/autologin"` | `POST` | Checks time "token" to see if user should be logged in automatically or not | `{data: foundUser}` | 401, 404, 408, 500 |
+| `"/signup"` | `POST` | Creates new user (check DATABASE_DOCUMENTATION for full info) | `{data: newUser}` | 400, 500 |
+
+#### **Posts**
+
+| URL | Method | Description | 200 Response | Unsuccessful status codes |
+| --- | --- | --- | --- | --- |
+| `"/posts"` | `GET` | Returns an array of all the created posts | `{data: allPosts}` | 404, 500 |
+| `"/posts/:userId"` | `GET` | Returns an array of posts created by a specific user | `{data: userPosts}` | 404, 500 |
+| `"/newpost"` | `POST` | Creates a new post with the finished drawing | `{data: createNewPost}` | 400, 404, 500 |
+| `"/editpost/:userId/:doodleId"` | `PATCH` | Edit content of a post made by user | `{data: updatedPost}` | 404, 409, 500 |
+| `"/like/:postId/:userId"` | `PATCH` | Adds (post)_id to user's list of Liked posts & adds (user)_id to the post's likes | `{data: {addLikeToPost, addLikeToUser}}` | 404, 409, 500 |
+| `"/unlike/:postId/:userId"` | `PATCH` | Removes (post)_id to user's list of Liked posts & removes (user)_id to the post's likes | `{data: {removeLikeToPost, removeLikeToUser}}` | 404, 409, 500 |
+| `"/comment/:postId/:userId"` | `PATCH` | Adds object with username, date & message to a post's comments | `{data: updatedPost}` | 404, 500 |
+| `"/removecomment/:postId"` | `PATCH` | Removes object with username, date & message to a post's comments | `{data: removeMessageFromPost}` | 404, 409, 500 |
+| `"/deleted/:userId/:doodleId"` | `DELETE` | Deletes selected post from logged in user | `{data: deletedPost}` | 409, 500 |

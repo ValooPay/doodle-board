@@ -1,7 +1,7 @@
 import { AllPostsContext } from "../contexts/AllPostsContext"
 import { UserSpecificPostsContext } from "../contexts/UserSpecificPostsContext"
 import { UserLoginContext } from "../contexts/UserLogInContext"
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import styled from "styled-components"
 import { format } from 'date-format-parse'
 
